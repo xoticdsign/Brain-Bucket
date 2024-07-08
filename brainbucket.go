@@ -20,12 +20,12 @@ func main() {
 	fmt.Printf("\nBrainBucket v1.0.0 : Made by @xoti$\n")
 	fmt.Printf("\nОписание:\nПривет! Меня зовут BrainBucket, я помогу тебе запомнить важное и вспомнить необходимое :)\n")
 
+menu:
 	for {
 		fmt.Printf("\nМеню:")
 		fmt.Printf("\n1. Доступные команды")
 		fmt.Printf("\n2. Описание программы")
 		fmt.Printf("\n3. Закрыть программу")
-
 		fmt.Printf("\n...\nВыбери действие: ")
 		if !scanner.Scan() {
 			fmt.Printf("\nОшибка ввода в меню :( - %v\n", scanner.Err())
@@ -43,8 +43,7 @@ func main() {
 				fmt.Printf("\n2. Удалить заметку")
 				fmt.Printf("\n3. Редактировать заметку")
 				fmt.Printf("\n4. Показать все заметки")
-				fmt.Printf("\n5. Вернуться в меню\n")
-
+				fmt.Printf("\n5. Вернуться в меню")
 				fmt.Printf("\n...\nВыбери действие: ")
 				if !scanner.Scan() {
 					fmt.Printf("\nОшибка ввода в субменю :( - %v\n", scanner.Err())
@@ -57,7 +56,7 @@ func main() {
 				// Добавить заметку
 
 				case "1":
-					fmt.Printf("\n...\nВведи текст заметки: ")
+					fmt.Printf("\nВведи текст заметки: ")
 					if !scanner.Scan() {
 						fmt.Printf("\nОшибка ввода заметки :( - %v\n", scanner.Err())
 						return
@@ -79,7 +78,7 @@ func main() {
 				// Вернуться в меню
 
 				case "5":
-					break // Need to be changed
+					continue menu
 
 				// Неправильный ввод пользователя в субменю
 
