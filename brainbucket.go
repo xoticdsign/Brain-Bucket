@@ -14,27 +14,28 @@ type Note struct {
 	Content string
 }
 
-var notes []Note
+var notes_db []Note
 
 func main() {
 
 	input_scanner := bufio.NewScanner(os.Stdin)
 
 	fmt.Printf("\nBrainBucket v1.0.0 : Made by @xoti$\n")
-	fmt.Printf("\nОписание:\nПривет! Меня зовут BrainBucket, я помогу тебе запомнить важное и вспомнить необходимое :)\n")
+	fmt.Printf("\nBrainBucket --> Привет, меня зовут BrainBucket, я помогу тебе запомнить важное и вспомнить необходимое!\n")
 
 menu:
 
 	for {
 
 		fmt.Printf("\nМеню:")
-		fmt.Printf("\n1. Доступные команды")
-		fmt.Printf("\n2. Описание программы")
-		fmt.Printf("\n3. Закрыть программу")
-		fmt.Printf("\n...\nВыбери действие: ")
+		fmt.Printf("\n1. Открыть меню заметок")
+		fmt.Printf("\n2. Закрыть меня")
+		fmt.Printf("\n3. Credits")
+		fmt.Printf("\n...\nЧто ты хочешь сделать: ")
 
 		if !input_scanner.Scan() {
-			fmt.Printf("\nОшибка ввода в меню :( - %v\n", input_scanner.Err())
+			fmt.Printf("\nBrainBucket --> Ошибка 100: не переживай, это я виноват... --> BrainBucket Status: :(\n")
+			fmt.Printf("\nError description: %v\n", input_scanner.Err())
 			return
 		}
 
@@ -46,15 +47,17 @@ menu:
 
 			for {
 
-				fmt.Printf("\n1. Добавить заметку")
-				fmt.Printf("\n2. Удалить заметку")
-				fmt.Printf("\n3. Редактировать заметку")
+				fmt.Printf("\nМеню заметок:")
+				fmt.Printf("\n1. Добавить новую заметку")
+				fmt.Printf("\n2. Попросить меня забыть заметку")
+				fmt.Printf("\n3. Отредактировать заметку")
 				fmt.Printf("\n4. Показать все заметки")
-				fmt.Printf("\n5. Вернуться в меню")
-				fmt.Printf("\n...\nВыбери действие: ")
+				fmt.Printf("\n5. Вернуться в главное меню")
+				fmt.Printf("\n...\nЧто ты хочешь сделать: ")
 
 				if !input_scanner.Scan() {
-					fmt.Printf("\nОшибка ввода в субменю :( - %v\n", input_scanner.Err())
+					fmt.Printf("\nBrainBucket --> Ошибка 200: не переживай, это я виноват... --> BrainBucket Status: :(\n")
+					fmt.Printf("\nError description: %v\n", input_scanner.Err())
 					return
 				}
 
@@ -64,44 +67,75 @@ menu:
 
 				case "1":
 
-					fmt.Printf("\nВведи текст заметки: ")
+					fmt.Printf("\nВведи текст новой заметки: ")
 
 					if !input_scanner.Scan() {
-						fmt.Printf("\nОшибка ввода заметки :( - %v\n", input_scanner.Err())
+						fmt.Printf("\nBrainBucket --> Ошибка 201: не переживай, это я виноват... --> BrainBucket Status: :(\n")
+						fmt.Printf("\nError description: %v\n", input_scanner.Err())
 						return
 					}
 
-					note_content := input_scanner.Text()
+					note_new_content := input_scanner.Text()
 
-					writing_note := make(chan bool)
+					new_channel := make(chan bool)
 
-					go NewNote(&note_content, writing_note)
+					go NewNote(&note_new_content, new_channel)
 
-					<-writing_note
+					<-new_channel
 
 				case "2":
 
-					fmt.Printf("\nКак удалить заметку:\nПопроси меня показать все заметки и выбери, какая из них тебе больше нужна, запомни, какая она по счету!\nПотом введи ее номер здесь :)\n")
+					fmt.Printf("\nFAQ: как удалить заметку?\nBrainBucket --> Выбери, какая из заметок тебе больше нужна, запомни, какая она по счету. Потом введи ее номер здесь!\n")
+					fmt.Printf("\nТвои заметки:\n%v\n", notes_db)
 					fmt.Printf("\nВведи номер заметки, которую ты хочешь удалить: ")
 
 					if !input_scanner.Scan() {
-						fmt.Printf("\nОшибка выбора заметки :O - %v\n", input_scanner.Err())
+						fmt.Printf("\nBrainBucket --> Ошибка 202: не переживай, это я виноват... --> BrainBucket Status: :(\n")
+						fmt.Printf("\nError description: %v\n", input_scanner.Err())
 						return
 					}
 
-					note_number := input_scanner.Text()
+					note_delete_index := input_scanner.Text()
 
-					deletion_channel := make(chan bool)
+					delete_channel := make(chan bool)
 
-					go RemoveNote(&note_number, deletion_channel)
+					go RemoveNote(&note_delete_index, delete_channel)
 
-					<-deletion_channel
+					<-delete_channel
 
 				case "3":
 
+					fmt.Printf("\nFAQ: как изменить заметку?\nBrainBucket --> Выбери, какую из заметок ты хочешь изменить, запомни, какая она по счету. Потом введи ее номер здесь!\n")
+					fmt.Printf("\nТвои заметки:\n%v", notes_db)
+					fmt.Printf("\nВведи номер заметки, которую ты хочешь изменить: ")
+
+					if !input_scanner.Scan() {
+						fmt.Printf("\nBrainBucket --> Ошибка 2030: не переживай, это я виноват... --> BrainBucket Status: :(\n")
+						fmt.Printf("\nError description: %v\n", input_scanner.Err())
+						return
+					}
+
+					note_edit := input_scanner.Text()
+
+					fmt.Printf("\nВведи новый текст для заметки: ")
+
+					if !input_scanner.Scan() {
+						fmt.Printf("\nBrainBucket --> Ошибка 2031: не переживай, это я виноват... --> BrainBucket Status: :(\n")
+						fmt.Printf("\nError description: %v\n", input_scanner.Err())
+						return
+					}
+
+					note_edit_content := input_scanner.Text()
+
+					edit_channel := make(chan bool)
+
+					go EditNote(&note_edit, &note_edit_content, edit_channel)
+
+					<-edit_channel
+
 				case "4":
 
-					fmt.Printf("\nТвои заметки:\n%v\n", notes)
+					fmt.Printf("\nТвои заметки:\n%v\n", notes_db)
 
 				case "5":
 
@@ -109,7 +143,7 @@ menu:
 
 				default:
 
-					fmt.Printf("\nТакого действия с заметками не существует...\n")
+					fmt.Printf("\nBrainBucket --> Такого действия с заметками не существует... --> BrainBucket Status: :<\n")
 
 				}
 
@@ -117,18 +151,18 @@ menu:
 
 		case "2":
 
-			fmt.Printf("\nBrainBucket v1.0.0 : Made by @xoti$\n")
-			fmt.Printf("\nОписание:\nПривет! Меня зовут BrainBucket, я помогу тебе запомнить важное и вспомнить необходимое :)\n")
-
-		case "3":
-
-			fmt.Printf("\nБыло приятно повидаться!\n")
+			fmt.Printf("\nBrainBucket --> Было приятно повидаться!\n")
 
 			return
 
+		case "3":
+
+			fmt.Printf("\nBrainBucket v1.0.0 : Made by @xoti$\n")
+			fmt.Printf("\nBrainBucket --> Привет, меня зовут BrainBucket, я помогу тебе запомнить важное и вспомнить необходимое!\n")
+
 		default:
 
-			fmt.Printf("\nТы выбрал несуществующее действие, попробуй еще раз :O\n")
+			fmt.Printf("\nBrainBucket --> Такого пункта меню не существует... --> BrainBucket Status: :<\n")
 
 		}
 
@@ -136,29 +170,63 @@ menu:
 
 }
 
-func NewNote(note_content *string, writing_note chan bool) {
+func NewNote(note_new_content *string, new_channel chan bool) {
 
-	notes = append(notes, Note{
+	notes_db = append(notes_db, Note{
 		Date:    time.Now(),
-		Content: *note_content,
+		Content: *note_new_content,
 	})
 
-	fmt.Printf("Добавил твою заметку!\n")
+	fmt.Printf("\nBrainBucket --> Добавил новую заметку!\n")
 
-	writing_note <- true
+	new_channel <- true
 
 }
 
-func RemoveNote(note_number *string, deletion_channel chan bool) {
+func RemoveNote(note_delete_index *string, delete_channel chan bool) {
 
-	note_number_int, err0r := strconv.Atoi(*note_number)
+	note_delete_index_int, err0r := strconv.Atoi(*note_delete_index)
+
 	if err0r != nil {
-		fmt.Printf("Недопустимое значение :< - %v\n", *note_number)
-		deletion_channel <- false
+
+		fmt.Printf("\nBrainBucket --> Ты ввел неверные данные, по ним не получится найти необходимую заметку... --> BrainBucket Status: :<\n")
+
+		delete_channel <- false
+
 	} else {
-		notes = append(notes[:note_number_int], notes[note_number_int+1:]...)
-		fmt.Printf("Заметка %v удалена!\n", notes[note_number_int])
-		deletion_channel <- true
+
+		fmt.Printf("\nBrainBucket --> Заметка %v удалена!\n", notes_db[note_delete_index_int])
+
+		notes_db = append(notes_db[:note_delete_index_int], notes_db[note_delete_index_int+1:]...)
+
+		delete_channel <- true
+
+	}
+
+}
+
+func EditNote(note_edit *string, note_edit_content *string, edit_channel chan bool) {
+
+	note_edit_int, err0r := strconv.Atoi(*note_edit)
+
+	if err0r != nil {
+
+		fmt.Printf("\nBrainBucket --> Ты ввел неверные данные, по ним не получится найти необходимую заметку... --> BrainBucket Status: :<\n")
+
+		edit_channel <- false
+
+	} else {
+
+		notes_db[note_edit_int] = Note{
+
+			Date:    time.Now(),
+			Content: *note_edit_content,
+		}
+
+		fmt.Printf("\nBrainBucket --> Заметка %v изменена!\n", notes_db[note_edit_int])
+
+		edit_channel <- true
+
 	}
 
 }
