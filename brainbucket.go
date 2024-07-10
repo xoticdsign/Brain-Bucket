@@ -22,7 +22,7 @@ type Content struct {
 var notes_db []Note
 
 func main() {
-	fmt.Printf("\nBrainBucket CLI v1.0.0 : Made by @xoti$\n")
+	fmt.Printf("\nBrainBucket CLI v1.0.0 : Made by xoti$\n")
 	fmt.Printf("\nBrainBucket --> Привет, меня зовут BrainBucket, я помогу тебе запомнить важное и вспомнить необходимое!\n")
 
 	input_scanner := bufio.NewScanner(os.Stdin)
@@ -32,7 +32,7 @@ menu:
 		fmt.Printf("\nМеню:")
 		fmt.Printf("\n1. Открыть меню заметок")
 		fmt.Printf("\n2. Закрыть меня")
-		fmt.Printf("\n3. Credits")
+		fmt.Printf("\n3. Credits and License")
 
 		fmt.Printf("\n...\nЧто ты хочешь сделать: ")
 		if !input_scanner.Scan() {
@@ -176,8 +176,7 @@ menu:
 			return
 
 		case "3":
-			fmt.Printf("\nBrainBucket v1.0.0 : Made by xoti$\n\nBrainBucket is a command-line interface (CLI) tool designed to help you remember important\nthings and recall necessary information. It provides a simple and interactive way to manage notes.\n")
-			fmt.Printf("\nLICENSE FILE\n")
+			PrintLicense("LICENSE")
 
 		default:
 			fmt.Printf("\nBrainBucket --> Такого пункта меню не существует... --> BrainBucket Status: :<\n")
@@ -260,4 +259,23 @@ func ShowNotes() {
 	for _, note := range notes_db {
 		fmt.Printf("\n%v *. %v\n-----------------\n%v\n", note.Date, note.Content.Title, note.Content.Content)
 	}
+}
+
+func PrintLicense(file_path string) {
+	file, err0r := os.Open(file_path)
+	if err0r != nil {
+		fmt.Printf("\nBrainBucket --> Ошибка чтения файла... --> BrainBucket Status: :(\n")
+		return
+	}
+	defer file.Close()
+
+	file_scanner := bufio.NewScanner(file)
+	for file_scanner.Scan() {
+		fmt.Printf("\n%v", file_scanner.Text())
+	}
+	if err0r := file_scanner.Err(); err0r != nil {
+		fmt.Printf("\nBrainBucket --> Ошибка чтения файла... --> BrainBucket Status: :(")
+		return
+	}
+	fmt.Printf("\n")
 }
