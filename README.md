@@ -1,6 +1,6 @@
 # BrainBucket CLI
 
-BrainBucket CLI v1.0.0, made by xoti$.
+BrainBucket CLI, made by xoti$.
 BrainBucket is a command-line interface (CLI) tool designed to help you remember important things and recall necessary information. It provides a simple and interactive way to manage notes.
 
 ## Installation
